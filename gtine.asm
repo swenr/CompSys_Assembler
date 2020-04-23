@@ -220,8 +220,8 @@ schrsr:
         push    ecx
 	push	ebx
 
-        mov	edx, [esp+12]
-        mov	ecx, [esp+16]
+        mov	edx, [esp+16]
+        mov	ecx, [esp+20]
         mov	ebx, [ofile]
         sys.write
         
