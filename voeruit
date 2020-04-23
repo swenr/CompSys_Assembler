@@ -1,0 +1,3 @@
+#!/bin/bash
+ld -m elf_i386 $1.o gtine.o -o $1
+./$1
