@@ -27,7 +27,7 @@ extern openusr
 extern schrsr
         pushfd
         push dword outarea
-        push dword 71
+        push dword 72
         call schrsr
         popfd
 %endmacro
