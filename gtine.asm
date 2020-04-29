@@ -164,7 +164,8 @@ vindipunt:
         stosb
         mov     al, 0
         stosb
-        
+        mov	edx, 420
+        mov	ecx, 0
         mov	ebx, [ebx]
         sys.open
         mov     [ifile], eax
