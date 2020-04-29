@@ -127,7 +127,7 @@ leessr:
         push    ecx
         
         mov     edi, [esp+16]
-        mov	edx, 71
+        mov	edx, 70
         mov	ecx, inbuffer
         mov	ebx, [ifile]
         sys.read
