@@ -7,46 +7,34 @@
 %define sys_open        5
 
 [section .bss]
-getalbuffer:
-	resb	12
-inbuffer:
-        resb    72
-ofile:
-        resd    1
-ifile:
-        resd    1
+getalbuffer:            resb	12
+inbuffer:               resb    72
+ofile:                  resd    1
+ifile:                  resd    1
 
 [section .data]
-i_offset:
-        dd      0
-outbuffer:      
-        times 70 db ' ' 
-        db      0Ah
+i_offset:               dd      0
+outbuffer:              times 70 db ' ' 
+                        db 0Ah
 
-vraagzin:       
-        db      'graag een getal tussen -2147483648 en 2147483647 : '
-vraagzinl:      dd      51
-spatieserror:
-        db      'u vulde alleen spaties in', 0Ah, 0Dh
-spatieserrorl:  dd      27
-numeriekerror:
-        db      'de invoer is niet numeriek', 0Ah, 0Dh
-numeriekerrorl: dd      28
-eentekenerror:
-        db      'u vulde alleen een teken in', 0Ah, 0Dh
-eentekenerrorl: dd      29
-meertekenserror:
-        db      'u vulde 2 of meer tekens in', 0Ah, 0Dh
-meertekenserrorl:dd     29
-tegrooterror:
-        db      'de absolute waarde is te groot', 0Ah, 0Dh
-tegrooterrorl:  dd      32
+vraagzin:               db 'graag een getal tussen -2147483648 en 2147483647 : '
+vraagzinl:              dd 51
+spatieserror:           db 'u vulde alleen spaties in', 0Ah, 0Dh
+spatieserrorl:          dd 27
+numeriekerror:          db 'de invoer is niet numeriek', 0Ah, 0Dh
+numeriekerrorl:         dd 28
+eentekenerror:          db 'u vulde alleen een teken in', 0Ah, 0Dh
+eentekenerrorl:         dd 29
+meertekenserror:        db 'u vulde 2 of meer tekens in', 0Ah, 0Dh
+meertekenserrorl:       dd 29
+tegrooterror:           db 'de absolute waarde is te groot', 0Ah, 0Dh
+tegrooterrorl:          dd 32
 
-tien:     dd      10
-mineen:   dd      -1
-isneg:    dd      0
-hasteken: dd     0
-hasnum:   dd      0
+tien:                   dd 10
+mineen:                 dd -1
+isneg:                  dd 0
+hasteken:               dd 0
+hasnum:                 dd 0
 
 [section .text]
 align 4
@@ -84,158 +72,148 @@ get.kernel.attention:
 %endmacro
 
 global tkstbsr
-tkstbsr:
-        push	ebx
-        push    ecx
-        push	edx
-        push	esi	
-	xor	edx, edx
-        xor     ebx, ebx
-begintkstb:
-        dec     ecx
-        cmp     ecx, 0
-        jl      eindtkstb
-        lodsb
-        cmp	al, ' '
-        je	begintkstb
-        cmp	al, '-'
-        jne	geentekentkstb
-        mov	edx, -1
-        jmp	begintkstb
-geentekentkstb:
-        xor     al, 30h
-        lea     ebx, [ebx*4 + ebx]
-        lea     ebx, [ebx*2 + eax]
-        jmp     begintkstb
-eindtkstb:
-        xchg    ebx, eax
-	cmp	edx, 0
-	je	nietnegtkstb
-	neg	eax
-nietnegtkstb:
-	pop	esi
-	pop	edx
-	pop	ecx
-        pop     ebx
-        ret
+tkstbsr:        push	ebx
+                push    ecx
+                push	edx
+                push	esi	
+                xor	edx, edx
+                xor     ebx, ebx
+
+begintkstb:     dec     ecx
+                cmp     ecx, 0
+                jl      eindtkstb
+                lodsb
+                cmp	al, ' '
+                je	begintkstb
+                cmp	al, '-'
+                jne	geentekentkstb
+                mov	edx, -1
+                jmp	begintkstb
+geentekentkstb: xor     al, 30h
+                lea     ebx, [ebx*4 + ebx]
+                lea     ebx, [ebx*2 + eax]
+                jmp     begintkstb
+eindtkstb:      xchg    ebx, eax
+                cmp	edx, 0
+                je	nietnegtkstb
+                neg	eax
+nietnegtkstb:   pop	esi
+                pop	edx
+                pop	ecx
+                pop     ebx
+                ret
 
 global leessr
-leessr:
-
-        push    edi
-        push    esi
-        push    ecx
-        
-        mov     edi, [esp+16]
-        mov	edx, 70
-        mov	ecx, inbuffer
-        mov	ebx, [ifile]
-        sys.read
-        mov     ecx, eax
-        mov     esi, inbuffer
-        rep     movsb
-        
-        pop     ecx
-        pop     esi
-        pop     edi
-        ret 4
+leessr:         push    edi
+                push    esi
+                push    ecx
+                
+                mov     edi, [esp+16]
+                mov	edx, 70
+                mov	ecx, inbuffer
+                mov	ebx, [ifile]
+                sys.read
+                mov     ecx, eax
+                mov     esi, inbuffer
+                rep     movsb
+                
+                pop     ecx
+                pop     esi
+                pop     edi
+                ret 4
 
 global openisr
-openisr:
-        push    eax
-        push    ebx
-        push    esi
-        push    edi
-        
-        lea     ebx, [esp+24]
-        mov     esi, [ebx]
-        mov     edi, esi
-        cld
-        add     edi, 1
-        lodsb
-vindipunt:
-        add     edi, 1
-        lodsb
-        cmp     al, '.'
-        jne     vindipunt
-        mov     al, 'i'
-        stosb
-        mov     al, 'n'
-        stosb
-        mov     al, 0
-        stosb
-        mov	edx, 420
-        mov	ecx, 0
-        mov	ebx, [ebx]
-        sys.open
-        mov     [ifile], eax
-        
-        pop     edi
-        pop     esi
-        pop     ebx
-        pop     eax
-        ret 8
+openisr:        push    eax
+                push    ebx
+                push    esi
+                push    edi
+                
+                lea     ebx, [esp+24] ; Het SA van mvpad zit op esp+24. Het adres van het SA wordt in ebx gestoken
+                mov     esi, [ebx]    ; Het SA van mvpad wordt in esi gestoken
+                mov     edi, esi
+                cld
+                add     edi, 1
+                lodsb
+
+vindipunt:      add     edi, 1
+                lodsb
+                cmp     al, '.'
+                jne     vindipunt
+                mov     al, 'i'
+                stosb
+                mov     al, 'n'
+                stosb
+                mov     al, 0
+                stosb
+                mov	edx, 420
+                mov	ecx, 0
+                mov	ebx, [ebx]
+                sys.open
+                mov     [ifile], eax
+                
+                pop     edi
+                pop     esi
+                pop     ebx
+                pop     eax
+                ret 8
 
 global openusr
-openusr:
-        push    eax
-        push    ebx
-        push    esi
-        push    edi
-        
-        lea     ebx, [esp+24]
-        mov     esi, [ebx]
-        mov     edi, esi
-        cld
-        add     edi, 1
-        lodsb
-vindopunt:
-        add     edi, 1
-        lodsb
-        cmp     al, '.'
-        jne     vindopunt
-        mov     al, 'u'
-        stosb
-        mov     al, 'i'
-        stosb
-        mov     al, 't'
-        stosb
-        mov     al, 0
-        stosb
-        
-        mov	edx, 420
-        mov	ecx, 0200h | 0400h | 01h
-        mov	ebx, [ebx]
-        sys.open
-        mov     [ofile], eax
-        
-        pop     edi
-        pop     esi
-        pop     ebx
-        pop     eax
-        ret 8
+openusr:        push    eax
+                push    ebx
+                push    esi
+                push    edi
+                
+                lea     ebx, [esp+24]
+                mov     esi, [ebx]
+                mov     edi, esi
+                cld
+                add     edi, 1
+                lodsb
+
+vindopunt:      add     edi, 1
+                lodsb
+                cmp     al, '.'
+                jne     vindopunt
+                mov     al, 'u'
+                stosb
+                mov     al, 'i'
+                stosb
+                mov     al, 't'
+                stosb
+                mov     al, 0
+                stosb
+                
+                mov	edx, 420
+                mov	ecx, 0200h | 0400h | 01h
+                mov	ebx, [ebx]
+                sys.open
+                mov     [ofile], eax
+                
+                pop     edi
+                pop     esi
+                pop     ebx
+                pop     eax
+                ret 8
   
 global schrsr
-schrsr:
-        push    edx
-        push    ecx
-	push	ebx
+schrsr:         push    edx
+                push    ecx
+                push	ebx
 
-        mov	edx, [esp+16]
-        mov	ecx, [esp+20]
-        mov	ebx, [ofile]
-        sys.write
+                mov	edx, [esp+16]
+                mov	ecx, [esp+20]
+                mov	ebx, [ofile]
+                sys.write
+                
+                pop     ebx
+                pop     ecx
+                pop	edx
+                ret	8
         
-        pop     ebx
-        pop     ecx
-	pop	edx
-        ret	8
-   
 global sluitsr
-sluitsr:
-        push dword 0
-        sys.exit
-        ret
+sluitsr:        push dword 0
+                sys.exit
+                ret
 
 global invsr
 invsr:
@@ -364,7 +342,7 @@ geeninput:
        	mov     ebx, [hasteken]
        	cmp     ebx, 1
        	je      enkelteken
-	toonError	spatieserror, [spatieserrorl]
+	toonError spatieserror, [spatieserrorl]
         
 negteken:
         mov     ebx, [hasteken]
@@ -390,7 +368,7 @@ uitsr:
         push	ecx
         push	edx
         push	edi
-        pushfd
+
 
 ; eerst de outputbuffer legen, en de getalbuffer, ook
         xor	eax, eax
@@ -440,11 +418,9 @@ uitsrgroterdannul:
         mov     ebx, stdout
         sys.write
 
-        popfd
         pop     edi
         pop     edx
         pop     ecx
         pop     ebx
         pop     eax
-
         ret 4

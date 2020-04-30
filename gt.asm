@@ -1,7 +1,7 @@
 %macro   covar 0.nolist
 [section .data]
 times 100 dd 0
-mvpad   : db './',__FILE__
+mvpad   : db './',__FILE__  ; Dit is ./oef.asm, de naam van het bestand eindigend op asm.
 mvnapad : db 0
 %endmacro
 
@@ -27,20 +27,18 @@ extern openusr
 extern schrsr
         pushfd
         push dword outarea
-        push dword 72
+        push dword 71
         call schrsr
         popfd
 %endmacro
 
 %macro   uit 1.nolist
 extern uitsr
-        pushfd
         push esi
         lea esi,%1
         push  esi
         call uitsr
         pop esi
-        popfd
 %endmacro
 
 %macro  inv 1.nolist       
