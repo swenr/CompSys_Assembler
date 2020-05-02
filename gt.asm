@@ -8,8 +8,8 @@ mvnapad : db 0
 %macro   openin   0.nolist         
 extern openisr
         pushfd
-        push dword mvpad
-        push dword mvnapad
+        push mvpad
+        push mvnapad
         call openisr
         popfd
 %endmacro
@@ -17,8 +17,8 @@ extern openisr
 %macro   openuit  0.nolist
 extern openusr
         pushfd
-        push dword mvpad
-        push dword mvnapad
+        push mvpad
+        push mvnapad
         call openusr
         popfd
 %endmacro
@@ -26,8 +26,8 @@ extern openusr
 %macro   schrijf  0.nolist         
 extern schrsr
         pushfd
-        push dword outarea
-        push dword 71
+        push outarea
+        push 71
         call schrsr
         popfd
 %endmacro
@@ -48,7 +48,7 @@ extern invsr
         pushfd
         push esi
         lea esi,%1
-        push  esi
+        push esi
         call invsr
         pop esi
         popfd
@@ -59,7 +59,7 @@ extern leessr
         pushfd
         push ebx
         push edx
-        push dword inarea
+        push inarea
         call leessr
         pop edx
         pop ebx
@@ -69,11 +69,7 @@ extern leessr
 %macro  inleiding 0.nolist
 [section .text]
 global _start
-global start
-global main
 _start:
-start: 
-main:
 %endmacro
 
 %macro   slot 0.nolist

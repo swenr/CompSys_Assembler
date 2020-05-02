@@ -19,15 +19,15 @@ outbuffer:              times 70 db ' '
 
 vraagzin:               db 'graag een getal tussen -2147483648 en 2147483647 : '
 vraagzinl:              dd 51
-spatieserror:           db 'u vulde alleen spaties in', 0Ah, 0Dh
+spatieserror:           db 'u vulde alleen spaties in', 0Ah
 spatieserrorl:          dd 27
-numeriekerror:          db 'de invoer is niet numeriek', 0Ah, 0Dh
+numeriekerror:          db 'de invoer is niet numeriek', 0Ah
 numeriekerrorl:         dd 28
-eentekenerror:          db 'u vulde alleen een teken in', 0Ah, 0Dh
+eentekenerror:          db 'u vulde alleen een teken in', 0Ah
 eentekenerrorl:         dd 29
-meertekenserror:        db 'u vulde 2 of meer tekens in', 0Ah, 0Dh
+meertekenserror:        db 'u vulde 2 of meer tekens in', 0Ah
 meertekenserrorl:       dd 29
-tegrooterror:           db 'de absolute waarde is te groot', 0Ah, 0Dh
+tegrooterror:           db 'de absolute waarde is te groot', 0Ah
 tegrooterrorl:          dd 32
 
 tien:                   dd 10
@@ -253,9 +253,6 @@ invoersan:
         je      eoi
 
         cmp     al, 0Ah
-        je      invoersan
-        
-        cmp     al, 0Dh
         je      invoersan
         
         cmp     al, ' '
