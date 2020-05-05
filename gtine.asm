@@ -35,6 +35,7 @@ mineen:                 dd -1
 isneg:                  dd 0
 hasteken:               dd 0
 hasnum:                 dd 0
+chars:                  dd 0
 
 [section .text]
 align 4
@@ -104,22 +105,42 @@ nietnegtkstb:   pop	esi
                 ret
 
 global leessr
-leessr:         push    edi
+leessr:         push    ebp
+                mov     ebp, esp
+                push    edi
                 push    esi
                 push    ecx
                 
-                mov     edi, [esp+16]
-                mov	edx, 71
-                mov	ecx, inbuffer
-                mov	ebx, [ifile]
+                xor     ecx, ecx
+                mov     [chars], ecx         ; chars bevat het aantal ingelezen karakters.
+                mov     edi, [ebp+8]
+                mov     ecx, 70
+leesbyte:       push    ecx
+                mov     edx, 1
+                mov     ecx, inbuffer
+                mov     ebx, [ifile]
                 sys.read
-                mov     ecx, eax
+                pop     ecx
+
                 mov     esi, inbuffer
-                rep     movsb
-                
+                lodsb
+                cmp     al, 0Ah
+                je      leesNLfound
+                mov     esi, inbuffer
+                movsb
+                mov eax, 1
+                add     [chars], eax
+                loop    leesbyte
+
+leesNLfound:    mov     al, ' '
+                rep     stosb
+
+                mov     eax, [chars]
+
                 pop     ecx
                 pop     esi
                 pop     edi
+                pop     ebp
                 ret 4
 
 global openisr
