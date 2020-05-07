@@ -114,7 +114,7 @@ leessr:         push    ebp
                 xor     ecx, ecx
                 mov     [chars], ecx         ; chars bevat het aantal ingelezen karakters.
                 mov     edi, [ebp+8]
-                mov     ecx, 70
+                mov     ecx, 71
 leesbyte:       push    ecx
                 mov     edx, 1
                 mov     ecx, inbuffer
