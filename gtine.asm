@@ -144,12 +144,13 @@ leesNLfound:    mov     al, ' '
                 ret 4
 
 global openisr
-openisr:        push    eax
+openisr:        push	ecx
+		push    eax
                 push    ebx
                 push    esi
                 push    edi
                 
-                lea     ebx, [esp+24] ; Het SA van mvpad zit op esp+24. Het adres van het SA wordt in ebx gestoken
+                lea     ebx, [esp+28] ; Het SA van mvpad zit op esp+24. Het adres van het SA wordt in ebx gestoken
                 mov     esi, [ebx]    ; Het SA van mvpad wordt in esi gestoken
                 mov     edi, esi
                 cld
@@ -176,6 +177,7 @@ vindipunt:      add     edi, 1
                 pop     esi
                 pop     ebx
                 pop     eax
+		pop	ecx
                 ret 8
 
 global openusr
