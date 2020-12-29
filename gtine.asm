@@ -132,7 +132,8 @@ leesbyte:       push    ecx
                 add     [chars], eax
                 loop    leesbyte
 
-leesNLfound:    mov     al, ' '
+leesNLfound:    sub	ecx, 1
+		mov     al, ' '
                 rep     stosb
 
                 mov     eax, [chars]
