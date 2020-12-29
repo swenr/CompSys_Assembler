@@ -79,6 +79,7 @@ tkstbsr:        push	ebx
                 push	esi	
                 xor	edx, edx
                 xor     ebx, ebx
+		xor	eax, eax
 
 begintkstb:     dec     ecx
                 cmp     ecx, 0
