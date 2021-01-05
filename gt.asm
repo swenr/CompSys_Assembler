@@ -59,6 +59,7 @@ extern invsr
 %macro  lees 0.nolist
 extern leessr
         pushfd
+        cld
         push ebx
         push edx
         push inarea
