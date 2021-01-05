@@ -35,6 +35,7 @@ extern schrsr
 %macro   uit 1.nolist
 extern uitsr
         pushfd
+        cld
         push esi
         lea esi,%1
         push  esi
