@@ -34,11 +34,13 @@ extern schrsr
 
 %macro   uit 1.nolist
 extern uitsr
+        pushfd
         push esi
         lea esi,%1
         push  esi
         call uitsr
         pop esi
+        popfd
 %endmacro
 
 %macro  inv 1.nolist       
